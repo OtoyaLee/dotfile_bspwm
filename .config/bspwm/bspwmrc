@@ -1,18 +1,57 @@
 #! /bin/sh
 
+#启动热键守护程序，用以监听按键并执行自定义功能
 pgrep -x sxhkd > /dev/null || sxhkd &
 
-bspc monitor -d I II III IV V VI VII VIII IX X
+#在显示器上配置桌面名称
+#如果有更多显示器，可以使用xrandr -q或者bspc query -M --names查询显示器编号
+#并换行添加不同显示器上的其他桌面，example:
+#bspc monitor 显示器编号 -d 桌面名
+bspc monitor -d 1 2 3 4 5 6 7 8
 
-bspc config border_width         2
-bspc config window_gap          12
+#启动polybar的脚本，使用绝对路径
+/home/otoya/.config/polybar/launch.sh
 
-bspc config split_ratio          0.52
+#每个窗口的边框宽度
+bspc config border_width         4
+#窗口与窗口间的间隙
+bspc config window_gap          10
+#窗口分割比例(0～1)
+bspc config split_ratio          0.5
+#如果只有一个平铺窗口，设置桌面布局为单窗口
+bspc config single_monocle	 	false
+#单窗口隐藏边框开启
 bspc config borderless_monocle   true
+#单窗口时是否隐藏边界间隙
 bspc config gapless_monocle      true
+#窗口跟随鼠标聚焦
+bspc config focus_follows_pointer	true
 
-bspc rule -a Gimp desktop='^8' state=floating follow=on
-bspc rule -a Chromium desktop='^2'
-bspc rule -a mplayer2 state=floating
-bspc rule -a Kupfer.py focus=on
-bspc rule -a Screenkey manage=off
+#聚焦显示器窗口边框颜色
+bspc config focused_border_color	"#BD93F9"
+#普通窗口边框颜色
+bspc config normal_border_color		"#282a36"
+#消息反馈区域颜色，例如网页超链接悬浮时的颜色
+bspc config presel_feedback_color	"#50FA7B"
+
+#窗口规则，example:
+#bspc rule -a Gimp desktop='^8' state=floating
+#             软件名  桌面序号      状态   悬浮
+
+#state(窗口状态)：tiled|pseudo_tiled|floating|fullscreen
+#                平铺     居中平铺      悬浮      全屏
+
+#code显示在2号桌面
+bspc rule -a Visual Studio Code desktop='^2'
+
+#输入法启动 fcitx5
+fcitx5 &
+#随机壁纸 feh
+feh --randomize --bg-fill /home/otoya/Pictures/wallpaper/*
+#      随机参数  壁纸填充方式  壁纸文件绝对路径
+#混成器 picom
+picom &
+#通知消息管理器 dunst
+dunst &
+#自动挂载u盘
+udiskie &
