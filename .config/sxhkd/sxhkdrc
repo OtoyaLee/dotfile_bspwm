@@ -3,38 +3,52 @@
 #
 
 # terminal emulator
+# 终端
 super + Return
-	urxvt
+	alacritty
 
 # program launcher
+# 程序启动器
 super + @space
-	dmenu_run
+	rofi -show drun
 
-# make sxhkd reload its configuration files:
+# make sxhkd reload its configuration files
+# 重新加载sxhkd配置文件
 super + Escape
 	pkill -USR1 -x sxhkd
+
+# wallpaper randoize
+# 随机壁纸
+# 绝对路径
+alt + @space
+	feh --randomize --bg-fill /home/otoya/Pictures/wallpaper/*
 
 #
 # bspwm hotkeys
 #
 
 # quit/restart bspwm
+# 退出/重启 bspwm
 super + alt + {q,r}
 	bspc {quit,wm -r}
 
 # close and kill
-super + {_,shift + }w
+# 结束|杀死窗口
+super + {_,shift + }q
 	bspc node -{c,k}
 
 # alternate between the tiled and monocle layout
+# 切换平铺和全屏
 super + m
 	bspc desktop -l next
 
 # send the newest marked node to the newest preselected node
+# 不太理解,有待研究
 super + y
 	bspc node newest.marked.local -n newest.!automatic.local
 
 # swap the current node and the biggest window
+# 将当前活动窗口移动到所有桌面中最大的窗口处
 super + g
 	bspc node -s biggest.window
 
@@ -43,10 +57,12 @@ super + g
 #
 
 # set the window state
+# 设置窗口状态
 super + {t,shift + t,s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
+# 应该也算一类状态，例如隐藏该窗口不占用桌面空间
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
@@ -55,32 +71,40 @@ super + ctrl + {m,x,y,z}
 #
 
 # focus the node in the given direction
+# 交换窗口位置
+# h、l左右交换 ， j、k上下交换
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 
 # focus the node for the given path jump
+# 选中聚焦窗口，例如将选中的窗口传送到其他桌面
 super + {p,b,comma,period}
 	bspc node -f @{parent,brother,first,second}
 
 # focus the next/previous window in the current desktop
+# 在同一各桌面中按顺序切换窗口
 super + {_,shift + }c
 	bspc node -f {next,prev}.local.!hidden.window
 
 # focus the next/previous desktop in the current monitor
+# 按顺序切换桌面
 super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
 # focus the last node/desktop
+# 切换最近使用的两个桌面
 super + {grave,Tab}
 	bspc {node,desktop} -f last
 
 # focus the older or newer node in the focus history
+# 切换最近和最远使用的两个桌面，大概
 super + {o,i}
 	bspc wm -h off; \
 	bspc node {older,newer} -f; \
 	bspc wm -h on
 
 # focus or send to the given desktop
+# 将当前窗口发送到其他桌面
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
 
@@ -89,18 +113,22 @@ super + {_,shift + }{1-9,0}
 #
 
 # preselect the direction
+# 预览四种比例及位置，用于创建一个新窗口
 super + ctrl + {h,j,k,l}
 	bspc node -p {west,south,north,east}
 
 # preselect the ratio
+# 调整预览比例高低
 super + ctrl + {1-9}
 	bspc node -o 0.{1-9}
 
 # cancel the preselection for the focused node
+# 取消预览
 super + ctrl + space
 	bspc node -p cancel
 
 # cancel the preselection for the focused desktop
+# 取消聚焦桌面的新窗口选区预览
 super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
@@ -109,13 +137,20 @@ super + ctrl + shift + space
 #
 
 # expand a window by moving one of its side outward
+# 向外增大窗口一侧的高度
+# 如果是左右平铺则调整左右
+# 上下平铺则调整上下
 super + alt + {h,j,k,l}
 	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 
 # contract a window by moving one of its side inward
+#向内减小窗口一侧的高的
+# 如果是左右平铺则调整左右
+# 上下平铺则调整上下
 super + alt + shift + {h,j,k,l}
 	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
 # move a floating window
+# 移动悬浮窗口
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
